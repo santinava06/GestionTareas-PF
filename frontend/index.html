@@ -3,19 +3,29 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Gestor de Tareas</title>
+  <title>Gestión de Tareas - API RESTful</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
-    <h1>Gestor de Tareas</h1>
-    <form id="task-form">
-      <input type="text" id="task-input" placeholder="Nueva tarea..." required />
-      <button type="submit">Agregar</button>
-    </form>
-    <ul id="task-list"></ul>
+    <div class="header">
+      <h1>📋 Gestión de Tareas</h1>
+    </div>
+    
+    <div class="form-container">
+      <form id="task-form">
+        <input type="text" id="task-input" placeholder="¿Qué necesitas hacer?" required />
+        <button type="submit">Agregar Tarea</button>
+      </form>
+    </div>
+    
+    <div class="tasks-container">
+      <ul id="task-list">
+        <!-- Las tareas se cargarán dinámicamente -->
+      </ul>
+    </div>
   </div>
-
+  
   <script src="index.js"></script>
 </body>
 </html>

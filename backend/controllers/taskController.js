@@ -1,41 +1,94 @@
-const db = require('../database/db');
+const Task = require('../models/Task');
+const ResponseHandler = require('../utils/responseHandler');
 
 // Obtener todas las tareas
-exports.getTasks = (req, res) => {
-  db.all('SELECT * FROM tasks', [], (err, rows) => {
-    if (err) return res.status(500).json({ error: err.message });
-    res.json(rows.map(r => ({ ...r, done: Boolean(r.done) })));
-  });
+exports.getTasks = async (req, res, next) => {
+  try {
+    const tasks = await Task.findAll();
+    ResponseHandler.success(res, tasks, 'Tareas obtenidas exitosamente');
+  } catch (error) {
+    next(error);
+  }
 };
 
-// Agregar una tarea
-exports.addTask = (req, res) => {
-  const { text } = req.body;
-  db.run('INSERT INTO tasks (text) VALUES (?)', [text], function (err) {
-    if (err) return res.status(500).json({ error: err.message });
-    res.status(201).json({ id: this.lastID, text, done: false });
-  });
+// Obtener una tarea específica
+exports.getTask = async (req, res, next) => {
+  try {
+    const task = await Task.findById(req.params.id);
+    ResponseHandler.success(res, task, 'Tarea obtenida exitosamente');
+  } catch (error) {
+    if (error.message === 'Tarea no encontrada') {
+      ResponseHandler.notFound(res, 'Tarea no encontrada');
+    } else {
+      next(error);
+    }
+  }
 };
 
-// Alternar completado
-exports.toggleTask = (req, res) => {
-  const id = req.params.id;
-  db.get('SELECT done FROM tasks WHERE id = ?', [id], (err, row) => {
-    if (err || !row) return res.status(404).json({ error: 'Tarea no encontrada' });
-
-    const newDone = row.done ? 0 : 1;
-    db.run('UPDATE tasks SET done = ? WHERE id = ?', [newDone, id], function (err) {
-      if (err) return res.status(500).json({ error: err.message });
-      res.json({ id: Number(id), done: Boolean(newDone) });
-    });
-  });
+// Crear una nueva tarea
+exports.createTask = async (req, res, next) => {
+  try {
+    const { text } = req.body;
+    const newTask = await Task.create(text);
+    ResponseHandler.created(res, newTask, 'Tarea creada exitosamente');
+  } catch (error) {
+    next(error);
+  }
 };
 
-// Eliminar tarea
-exports.deleteTask = (req, res) => {
-  const id = req.params.id;
-  db.run('DELETE FROM tasks WHERE id = ?', [id], function (err) {
-    if (err) return res.status(500).json({ error: err.message });
-    res.json({ success: true });
-  });
+// Actualizar una tarea
+exports.updateTask = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const updates = req.body;
+    
+    // Validar que solo se actualicen campos permitidos
+    const allowedFields = ['text', 'done'];
+    const filteredUpdates = {};
+    
+    for (const field of allowedFields) {
+      if (updates[field] !== undefined) {
+        filteredUpdates[field] = updates[field];
+      }
+    }
+    
+    const updatedTask = await Task.update(id, filteredUpdates);
+    ResponseHandler.success(res, updatedTask, 'Tarea actualizada exitosamente');
+  } catch (error) {
+    if (error.message === 'Tarea no encontrada') {
+      ResponseHandler.notFound(res, 'Tarea no encontrada');
+    } else {
+      next(error);
+    }
+  }
+};
+
+// Alternar estado de completado
+exports.toggleTask = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const updatedTask = await Task.toggle(id);
+    ResponseHandler.success(res, updatedTask, 'Estado de tarea actualizado');
+  } catch (error) {
+    if (error.message === 'Tarea no encontrada') {
+      ResponseHandler.notFound(res, 'Tarea no encontrada');
+    } else {
+      next(error);
+    }
+  }
+};
+
+// Eliminar una tarea
+exports.deleteTask = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    await Task.delete(id);
+    ResponseHandler.success(res, null, 'Tarea eliminada exitosamente');
+  } catch (error) {
+    if (error.message === 'Tarea no encontrada') {
+      ResponseHandler.notFound(res, 'Tarea no encontrada');
+    } else {
+      next(error);
+    }
+  }
 };

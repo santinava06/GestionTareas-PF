@@ -1,73 +1,221 @@
-body {
-  font-family: Arial, sans-serif;
-  background-color: #f0f2f5;
+* {
   margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
   padding: 20px;
 }
 
 .container {
-  max-width: 500px;
-  margin: auto;
+  max-width: 600px;
+  margin: 0 auto;
   background: white;
-  padding: 20px;
-  border-radius: 8px;
+  border-radius: 15px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
 }
 
-h1 {
+.header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 30px;
   text-align: center;
-  color: #333;
 }
 
-form {
+.header h1 {
+  font-size: 2.5em;
+  margin-bottom: 10px;
+  font-weight: 300;
+}
+
+.header p {
+  opacity: 0.9;
+  font-size: 1.1em;
+}
+
+.form-container {
+  padding: 30px;
+  border-bottom: 1px solid #eee;
+}
+
+#task-form {
   display: flex;
-  gap: 10px;
+  gap: 15px;
 }
 
-input[type="text"] {
+#task-input {
   flex: 1;
-  padding: 10px;
+  padding: 15px 20px;
+  border: 2px solid #e1e5e9;
+  border-radius: 10px;
   font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+#task-input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
 button {
-  padding: 10px 15px;
-  font-size: 16px;
-  background-color: #007bff;
+  padding: 15px 25px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 10px;
   cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  transition: all 0.3s ease;
 }
 
 button:hover {
-  background-color: #0056b3;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
 }
 
-ul {
+button:active {
+  transform: translateY(0);
+}
+
+.tasks-container {
+  padding: 30px;
+}
+
+#task-list {
   list-style: none;
-  padding: 0;
-  margin-top: 20px;
 }
 
-li {
-  padding: 10px;
-  background: #eee;
-  margin-bottom: 10px;
+.task-item {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  border-radius: 4px;
+  padding: 20px;
+  margin-bottom: 15px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  border-left: 4px solid #667eea;
+  transition: all 0.3s ease;
+  cursor: pointer;
 }
 
-li.done {
+.task-item:hover {
+  transform: translateX(5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.task-item.done {
+  border-left-color: #28a745;
+  background: #f8fff9;
+}
+
+.task-text {
+  flex: 1;
+  font-size: 16px;
+  color: #333;
+  transition: all 0.3s ease;
+}
+
+.task-text.completed {
   text-decoration: line-through;
-  color: gray;
+  color: #6c757d;
+  opacity: 0.7;
 }
 
 .delete-btn {
-  background-color: red;
+  background: #dc3545;
+  padding: 8px 15px;
+  font-size: 14px;
+  border-radius: 6px;
+  margin-left: 15px;
+}
+
+.delete-btn:hover {
+  background: #c82333;
+  transform: translateY(-1px);
+}
+
+/* Notificaciones */
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 15px 25px;
+  border-radius: 8px;
   color: white;
-  border: none;
-  padding: 5px 8px;
-  border-radius: 4px;
-  cursor: pointer;
+  font-weight: 600;
+  z-index: 1000;
+  animation: slideIn 0.3s ease;
+  max-width: 300px;
+}
+
+.notification.success {
+  background: #28a745;
+}
+
+.notification.error {
+  background: #dc3545;
+}
+
+.notification.info {
+  background: #17a2b8;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Estados de carga */
+.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    margin: 10px;
+    border-radius: 10px;
+  }
+  
+  .header {
+    padding: 20px;
+  }
+  
+  .header h1 {
+    font-size: 2em;
+  }
+  
+  .form-container,
+  .tasks-container {
+    padding: 20px;
+  }
+  
+  #task-form {
+    flex-direction: column;
+  }
+  
+  .task-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .delete-btn {
+    margin-left: 0;
+    align-self: flex-end;
+  }
 }
