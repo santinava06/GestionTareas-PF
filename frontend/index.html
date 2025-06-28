@@ -3,26 +3,92 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Gestión de Tareas - API RESTful</title>
+  <title>Gestión de Tareas</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
     <div class="header">
-      <h1>📋 Gestión de Tareas</h1>
+      <div class="header-content">
+        <div class="header-text">
+          <h1>📋 Gestión de Tareas</h1>
+          <p>Organiza tu día de manera eficiente</p>
+        </div>
+        <button id="theme-toggle" class="theme-toggle" title="Cambiar tema">
+          <span class="theme-icon">🌙</span>
+        </button>
+      </div>
     </div>
     
     <div class="form-container">
       <form id="task-form">
         <input type="text" id="task-input" placeholder="¿Qué necesitas hacer?" required />
-        <button type="submit">Agregar Tarea</button>
+        <select id="category-select">
+          <option value="">📂 Sin categoría</option>
+        </select>
+        <select id="priority-select">
+          <option value="low">🟢 Baja Prioridad</option>
+          <option value="medium" selected>🟡 Media Prioridad</option>
+          <option value="high">🔴 Alta Prioridad</option>
+        </select>
+        <input type="text" id="tags-input" placeholder="Etiquetas (separadas por comas)" />
+        <button type="submit">✨ Agregar Tarea</button>
       </form>
     </div>
     
+    <div class="filter-container">
+      <h3>Filtrar Tareas</h3>
+      <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+        <select id="category-filter">
+          <option value="">📋 Todas las tareas</option>
+        </select>
+        <select id="priority-filter">
+          <option value="">🎯 Todas las prioridades</option>
+          <option value="high">🔴 Alta Prioridad</option>
+          <option value="medium">🟡 Media Prioridad</option>
+          <option value="low">🟢 Baja Prioridad</option>
+        </select>
+        <input type="text" id="tag-filter" placeholder="Filtrar por etiqueta" />
+        <button id="clear-filter">🗑️ Limpiar Filtro</button>
+      </div>
+    </div>
+    
+    <div class="stats-container" style="margin: 20px 0; padding: 0 35px;">
+      <h2 style="color: #166534; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+        📊 Estadísticas
+      </h2>
+      <div id="stats-panel">
+        <!-- Estadísticas se cargarán aquí -->
+      </div>
+    </div>
+    
     <div class="tasks-container">
+      <h2 style="color: #166534; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+        📝 Mis Tareas
+      </h2>
       <ul id="task-list">
         <!-- Las tareas se cargarán dinámicamente -->
       </ul>
+    </div>
+  </div>
+
+  <!-- Modal de confirmación -->
+  <div id="delete-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>🗑️ Confirmar Eliminación</h3>
+        <button class="modal-close" id="modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>¿Estás seguro de que quieres eliminar esta tarea?</p>
+        <div class="task-preview">
+          <span id="task-text-preview"></span>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" id="btn-cancel">❌ Cancelar</button>
+        <button class="btn-confirm" id="btn-confirm">🗑️ Eliminar</button>
+      </div>
     </div>
   </div>
   
